@@ -84,18 +84,34 @@ document.querySelectorAll('.card-toggle').forEach(btn => {
 const amountInput = document.getElementById('amount');
 const presets = document.getElementById('presets');
 const donateForm = document.getElementById('donateForm');
-const monthlyInput = document.getElementById('monthly');
+const receiptPriceInput = donateForm.querySelector('input[name="price"]');
+const receiptPriceOutput = donateForm.querySelector('.ym-product-price');
+
+function syncDonationAmount() {
+  const amount = Number.parseFloat(amountInput.value);
+  if (!Number.isFinite(amount) || amount <= 0) return;
+
+  const formattedAmount = amount.toFixed(2);
+  receiptPriceInput.value = formattedAmount;
+  receiptPriceInput.setAttribute('value', formattedAmount);
+  receiptPriceOutput.dataset.price = formattedAmount;
+  receiptPriceOutput.textContent = `${formattedAmount.replace('.', ',')} ₽`;
+}
 
 presets.querySelectorAll('button').forEach(btn => {
   btn.addEventListener('click', () => {
     amountInput.value = btn.dataset.amount;
-    presets.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+    syncDonationAmount();
+    presets.querySelectorAll('button').forEach(item => item.classList.remove('active'));
     btn.classList.add('active');
   });
 });
 
 amountInput.addEventListener('input', () => {
-  presets.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+  syncDonationAmount();
+  presets.querySelectorAll('button').forEach(item => {
+    item.classList.toggle('active', item.dataset.amount === amountInput.value);
+  });
 });
 
 donateForm.addEventListener('submit', (event) => {
@@ -107,13 +123,10 @@ donateForm.addEventListener('submit', (event) => {
     amountInput.focus();
     return;
   }
-
-  if (monthlyInput.checked) {
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    alert('Ежемесячные пожертвования пока не подключены. Снимите галочку, чтобы сделать разовое пожертвование.');
-  }
+  syncDonationAmount();
 }, true);
+
+syncDonationAmount();
 
 // ===== Modal with focus trap =====
 const helpModal = document.getElementById('helpModal');
