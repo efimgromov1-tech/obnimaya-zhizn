@@ -384,6 +384,22 @@ button { font-family: inherit; }
   box-shadow: var(--shadow-lg);
   border: 1px solid var(--border);
 }
+.donate-contact {
+  width: 100%;
+  margin: 10px 0 18px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  outline: none;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+.donate-contact:focus {
+  border-color: var(--warm);
+  box-shadow: 0 0 0 3px rgba(212, 132, 90, .14);
+}
 .donate-label { font-weight: 700; font-size: 14px; }
 .amount-field { position: relative; margin-top: 10px; }
 .amount-field input {

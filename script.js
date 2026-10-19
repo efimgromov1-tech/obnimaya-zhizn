@@ -80,9 +80,12 @@ document.querySelectorAll('.card-toggle').forEach(btn => {
   });
 });
 
-// ===== Donate presets =====
+// ===== Donation amount presets =====
 const amountInput = document.getElementById('amount');
 const presets = document.getElementById('presets');
+const donateForm = document.getElementById('donateForm');
+const monthlyInput = document.getElementById('monthly');
+
 presets.querySelectorAll('button').forEach(btn => {
   btn.addEventListener('click', () => {
     amountInput.value = btn.dataset.amount;
@@ -90,17 +93,27 @@ presets.querySelectorAll('button').forEach(btn => {
     btn.classList.add('active');
   });
 });
+
 amountInput.addEventListener('input', () => {
   presets.querySelectorAll('button').forEach(b => b.classList.remove('active'));
 });
 
-// ===== Donate form =====
-document.getElementById('donateForm').addEventListener('submit', (e) => {
-  e.preventDefault();
-  const amount = parseInt(amountInput.value, 10);
-  if (!amount || amount < 50) { alert('Введите сумму от 50 ₽'); return; }
-  alert(`Спасибо! Сейчас откроется ЮKassa на сумму ${amount} ₽.\n(заглушка — вставьте shopId)`);
-});
+donateForm.addEventListener('submit', (event) => {
+  const amount = Number.parseFloat(amountInput.value);
+  if (!Number.isFinite(amount) || amount < 50) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    alert('Введите сумму от 50 ₽');
+    amountInput.focus();
+    return;
+  }
+
+  if (monthlyInput.checked) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    alert('Ежемесячные пожертвования пока не подключены. Снимите галочку, чтобы сделать разовое пожертвование.');
+  }
+}, true);
 
 // ===== Modal with focus trap =====
 const helpModal = document.getElementById('helpModal');
@@ -153,14 +166,6 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && helpModal.classList.contains('open')) {
     closeHelp();
   }
-});
-
-// ===== Socials stub =====
-document.querySelectorAll('.social').forEach(el => {
-  el.addEventListener('click', (e) => {
-    e.preventDefault();
-    alert(`Ссылка на ${el.dataset.net} появится позже.`);
-  });
 });
 
 // ===== Parallax blobs =====
